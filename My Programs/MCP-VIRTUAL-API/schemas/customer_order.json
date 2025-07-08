@@ -1,0 +1,24 @@
+{
+    "endpoint": "/customer/orders",
+    "method": "GET",
+    "context": "Retrieve a list of recent orders placed by a telecom subscriber, including plan changes, device purchases, and SIM activations.",
+    "responseSchema": {
+      "customerId": "string",
+      "orders": [
+        {
+          "orderId": "string",
+          "orderType": { "enum": ["PlanChange", "DevicePurchase", "SIMActivation"] },
+          "orderDate": "string (ISO 8601 format)",
+          "status": { "enum": ["Pending", "Processing", "Completed", "Cancelled"] },
+          "amount": "number",
+          "details": {
+            "description": "string",
+            "deviceModel": "string (nullable)",
+            "newPlan": "string (nullable)",
+            "simNumber": "string (nullable)"
+          }
+        }
+      ]
+    }
+  }
+  

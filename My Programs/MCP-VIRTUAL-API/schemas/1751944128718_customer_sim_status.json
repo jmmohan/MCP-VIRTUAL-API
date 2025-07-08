@@ -1,0 +1,17 @@
+{
+  "endpoint": "/customer/sim/status",
+  "method": "GET",
+  "context": "Get current status of the customer's SIM (active, suspended, deactivated).",
+  "responseSchema": {
+    "simNumber": "string",
+    "status": {
+      "enum": [
+        "Active",
+        "Suspended",
+        "Deactivated"
+      ]
+    },
+    "activationDate": "string",
+    "lastUsed": "string"
+  }
+}

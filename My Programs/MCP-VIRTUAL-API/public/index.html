@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP Virtual API Client</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 0 15px;
+      line-height: 1.5;
+    }
+    h1 {
+      text-align: center;
+    }
+    textarea, select, button {
+      width: 100%;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    textarea {
+      height: 140px;
+      resize: vertical;
+    }
+    button {
+      cursor: pointer;
+      padding: 10px;
+    }
+    .section {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+    }
+    /* Side-by-side layout for wider screens */
+    @media (min-width: 800px) {
+      .layout {
+        display: flex;
+        gap: 20px;
+      }
+      .layout .section {
+        flex: 1;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>MCP Virtual API Client</h1>
+
+  <div class="layout">
+    <div class="section">
+      <h2>Add New Schema</h2>
+      <label for="schemaJSON">Paste Schema JSON:</label>
+      <textarea id="schemaJSON" placeholder="{\n  \"endpoint\": \"/api/path\",\n  \"method\": \"GET\",\n  ...\n}"></textarea>
+      <button id="addSchemaBtn">Add Schema</button>
+    </div>
+
+    <div class="section">
+      <h2>Invoke Endpoint</h2>
+      <label for="schemaSelect">Select Schema / Endpoint:</label>
+      <select id="schemaSelect"></select>
+
+      <button id="sendBtn">Send Request</button>
+
+      <label for="responseBox">Response:</label>
+      <textarea id="responseBox" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    async function loadSchemas() {
+      try {
+        const res = await fetch('/schemas');
+        if (!res.ok) throw new Error('Failed to fetch schemas');
+        const schemas = await res.json();
+        const select = document.getElementById('schemaSelect');
+        select.innerHTML = '';
+        schemas.forEach((schema, idx) => {
+          const option = document.createElement('option');
+          option.value = idx;
+          option.textContent = `[${schema.method}] ${schema.endpoint}`;
+          option.dataset.endpoint = schema.endpoint;
+          option.dataset.method = schema.method;
+          select.appendChild(option);
+        });
+        if (schemas.length === 0) {
+          const opt = document.createElement('option');
+          opt.textContent = 'No schemas available';
+          select.appendChild(opt);
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // Initial population
+    loadSchemas();
+
+    document.getElementById('addSchemaBtn').addEventListener('click', async () => {
+      const raw = document.getElementById('schemaJSON').value.trim();
+      if (!raw) {
+        alert('Please paste a schema JSON first.');
+        return;
+      }
+      let schema;
+      try {
+        schema = JSON.parse(raw);
+      } catch (err) {
+        alert('Invalid JSON: ' + err.message);
+        return;
+      }
+      const res = await fetch('/schemas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(schema),
+      });
+      if (res.ok) {
+        alert('Schema added successfully');
+        document.getElementById('schemaJSON').value = '';
+        loadSchemas();
+      } else {
+        const msg = await res.text();
+        alert('Failed to add schema: ' + msg);
+      }
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      const select = document.getElementById('schemaSelect');
+      if (!select.options.length) {
+        alert('No schemas to invoke');
+        return;
+      }
+      const opt = select.options[select.selectedIndex];
+      const endpoint = opt.dataset.endpoint;
+      const method = opt.dataset.method.toUpperCase();
+
+      let url = endpoint;
+      const fetchOptions = { method };
+
+      // For non-GET methods send an empty JSON object
+      if (method !== 'GET') {
+        fetchOptions.headers = { 'Content-Type': 'application/json' };
+        fetchOptions.body = '{}';
+      }
+
+      try {
+        const response = await fetch(url, fetchOptions);
+        const data = await response.json();
+        document.getElementById('responseBox').value = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('responseBox').value = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html> 

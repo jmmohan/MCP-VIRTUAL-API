@@ -1,0 +1,52 @@
+{
+  "endpoint": "/customer/billing/history",
+  "method": "GET",
+  "context": "Retrieve the billing history for a telecom subscriber, including monthly charges, payments, and any adjustments.",
+  "responseSchema": {
+    "customerId": "string",
+    "billingRecords": [
+      {
+        "billingId": "string",
+        "billingPeriod": {
+          "startDate": "string (ISO 8601 format)",
+          "endDate": "string (ISO 8601 format)"
+        },
+        "dueDate": "string (ISO 8601 format)",
+        "amountDue": "number",
+        "amountPaid": "number",
+        "status": {
+          "enum": [
+            "Paid",
+            "Unpaid",
+            "Overdue",
+            "Partially Paid"
+          ]
+        },
+        "paymentMethod": {
+          "enum": [
+            "CreditCard",
+            "DebitCard",
+            "UPI",
+            "NetBanking",
+            "Wallet",
+            "AutoDebit",
+            "None"
+          ]
+        },
+        "adjustments": [
+          {
+            "type": {
+              "enum": [
+                "Discount",
+                "Penalty",
+                "Refund"
+              ]
+            },
+            "amount": "number",
+            "description": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

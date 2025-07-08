@@ -1,0 +1,32 @@
+{
+  "endpoint": "/support/tickets",
+  "method": "GET",
+  "context": "Fetch a list of support tickets submitted by the customer.",
+  "responseSchema": {
+    "customerId": "string",
+    "tickets": [
+      {
+        "ticketId": "string",
+        "subject": "string",
+        "category": {
+          "enum": [
+            "Network",
+            "Billing",
+            "Device",
+            "Other"
+          ]
+        },
+        "status": {
+          "enum": [
+            "Open",
+            "In Progress",
+            "Resolved",
+            "Closed"
+          ]
+        },
+        "createdDate": "string",
+        "lastUpdated": "string"
+      }
+    ]
+  }
+}

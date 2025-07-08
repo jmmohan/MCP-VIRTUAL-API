@@ -1,0 +1,18 @@
+{
+  "endpoint": "/customer/usage",
+  "method": "GET",
+  "context": "Fetch data, voice, and SMS usage statistics for the current billing cycle.",
+  "responseSchema": {
+    "customerId": "string",
+    "billingCycle": {
+      "startDate": "string",
+      "endDate": "string"
+    },
+    "dataUsedGB": "number",
+    "voiceMinutesUsed": "number",
+    "smsUsed": "number",
+    "dataLimitGB": "number",
+    "voiceLimit": "number",
+    "smsLimit": "number"
+  }
+}

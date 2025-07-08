@@ -1,0 +1,15 @@
+{
+  "customerId": "string",
+  "name": "string",
+  "email": "string",
+  "phoneNumber": "string",
+  "address": {
+    "street": "string",
+    "city": "string",
+    "state": "string",
+    "zipCode": "string",
+    "country": "string"
+  },
+  "plan": { "enum": ["Prepaid", "Postpaid"] },
+  "status": { "enum": ["Active", "Inactive", "Suspended"] }
+}

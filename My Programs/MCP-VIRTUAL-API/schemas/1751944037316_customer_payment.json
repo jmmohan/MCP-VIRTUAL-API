@@ -1,0 +1,26 @@
+{
+  "endpoint": "/customer/payment",
+  "method": "POST",
+  "context": "Submit a payment toward a customer’s bill using various payment methods.",
+  "responseSchema": {
+    "paymentId": "string",
+    "amount": "number",
+    "paymentMethod": {
+      "enum": [
+        "CreditCard",
+        "UPI",
+        "NetBanking",
+        "Wallet"
+      ]
+    },
+    "timestamp": "string",
+    "status": {
+      "enum": [
+        "Success",
+        "Failed",
+        "Pending"
+      ]
+    },
+    "message": "string"
+  }
+}

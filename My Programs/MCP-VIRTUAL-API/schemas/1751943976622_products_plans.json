@@ -1,0 +1,29 @@
+{
+  "endpoint": "/products/plans",
+  "method": "GET",
+  "context": "List all available mobile/data plans offered by the telecom provider.",
+  "responseSchema": {
+    "plans": [
+      {
+        "planId": "string",
+        "name": "string",
+        "type": {
+          "enum": [
+            "Prepaid",
+            "Postpaid",
+            "Data",
+            "Voice"
+          ]
+        },
+        "price": "number",
+        "validityDays": "number",
+        "features": {
+          "dataLimitGB": "number",
+          "smsLimit": "number",
+          "voiceMinutes": "number"
+        },
+        "description": "string"
+      }
+    ]
+  }
+}
